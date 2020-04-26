@@ -1,36 +1,24 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
+import { connect } from "react-redux";
 
 import AppHeader from '../app-header';
 import TodoList from '../todo-list';
 import SearchPanel from '../search-panel';
 import ItemStatusFilter from '../item-status-filter';
 import ItemAddForm from '../item-add-form';
-import ErrorBoundry from '../error-boundry';
-import LoadingIndicator from '../loading-indicator';
+//import LoadingIndicator from '../loading-indicator';
+import WithService from '../hoc/with-service'
+
+import * as actions from '../../actions';
 
 import './app.css';
 
 
-export default class App extends Component {
-
-  maxId = 100;
-
-  state = {
-    items: [
-      { id: 1, label: 'Drink Coffee', important: false, done: false },
-      { id: 2, label: 'Learn React', important: true, done: false },
-      { id: 3, label: 'Make Awesome App', important: false, done: false }
-    ],
-    filter: 'all',
-    search: '',
-    loading: true
-  };
+class App extends Component {
 
   onItemAdded = (label) => {
-    this.setState((state) => {
-      const item = this.createItem(label);
-      return { items: [...state.items, item] };
-    })
+    const item = this.createItem(label);
+    this.props.loadItems([...this.props.items, item]) ;
   };
 
   toggleProperty = (arr, id, propName) => {
@@ -48,35 +36,29 @@ export default class App extends Component {
   };
 
   onToggleDone = (id) => {
-    this.setState((state) => {
-      const items = this.toggleProperty(state.items, id, 'done');
-      return { items };
-    });
+    const items = this.toggleProperty(this.props.items, id, 'done');
+    this.props.loadItems(items);
   };
 
   onToggleImportant = (id) => {
-    this.setState((state) => {
-      const items = this.toggleProperty(state.items, id, 'important');
-      return { items };
-    });
+    const items = this.toggleProperty(this.props.items, id, 'important');
+    this.props.loadItems(items);
   };
 
   onDelete = (id) => {
-    this.setState((state) => {
       //копируем элементы, чтоб не мутировать состояние
-      const updateItems = [...state.items];
-      const idx = updateItems.findIndex((item) => item.id === id);
-      updateItems.splice(idx, 1);
-      return { items: updateItems };
-    });
+      const items = [...this.props.items];
+      const idx = items.findIndex((item) => item.id === id);
+      items.splice(idx, 1);
+      this.props.loadItems(items);
   };
 
   onFilterChange = (filter) => {
-    this.setState({ filter });
+    this.props.setFilter(filter);
   };
 
   onSearchChange = (search) => {
-    this.setState({ search });
+    this.props.setSearch(search);
   };
 
   createItem(label) {
@@ -98,7 +80,7 @@ export default class App extends Component {
     }
   }
 
-  searchItems(items, search) {
+  searchItems(items, search='') {
     if (search.length === 0) {
       return items;
     }
@@ -110,42 +92,56 @@ export default class App extends Component {
 
   finishLoading = () => this.setState({loading: false});
 
-  componentDidCatch() {
-    console.log('err');
-  }
+  componentDidMount() {
+    console.log('mount');
+    const items = this.props.service.getItems();
+    this.props.loadItems(items);
+  } 
+
+
 
   render() {
-    if (this.state.loading) return <LoadingIndicator finishLoading={this.finishLoading}/>;
-
-    const { items, filter, search } = this.state;
+    //закомментил загрузку чтоб не мешала
+    //if (this.state.loading) return <LoadingIndicator finishLoading={this.finishLoading}/>;
+    console.log('render');
+    const { items, filter, search } = this.props;
     const doneCount = items.filter((item) => item.done).length;
     const toDoCount = items.length - doneCount;
     const visibleItems = this.searchItems(this.filterItems(items, filter), search); 
 
     return (
       <div className="todo-app"> 
-        <ErrorBoundry>
-          <AppHeader toDo={toDoCount} done={doneCount}/>
+        <AppHeader toDo={toDoCount} done={doneCount}/>
 
-          <div className="search-panel d-flex">
-            <SearchPanel
-              onSearchChange={this.onSearchChange}/>
+        <div className="search-panel d-flex">
+          <SearchPanel
+            onSearchChange={this.onSearchChange}/>
 
-            <ItemStatusFilter
-              filter={filter}
-              onFilterChange={this.onFilterChange} />
-          </div>
-        
-          <TodoList
-            items={ visibleItems }
-            onToggleImportant={this.onToggleImportant}
-            onToggleDone={this.onToggleDone}
-            onDelete={this.onDelete} />
+          <ItemStatusFilter
+            filter={filter}
+            onFilterChange={this.onFilterChange} />
+        </div>
+      
+        <TodoList
+          items={ visibleItems }
+          onToggleImportant={this.onToggleImportant}
+          onToggleDone={this.onToggleDone}
+          onDelete={this.onDelete} />
 
-          <ItemAddForm
-            onItemAdded={this.onItemAdded} />
-        </ErrorBoundry>
+        <ItemAddForm
+          onItemAdded={this.onItemAdded} />
       </div>
     );
   };
 }
+
+const mapStateToProps = ({items, filter, search, loading}) => {
+  return {
+    items,
+    filter,
+    search,
+    loading
+  };
+};
+
+export default connect(mapStateToProps, actions)(WithService(App));

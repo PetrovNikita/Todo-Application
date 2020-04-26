@@ -4,7 +4,8 @@ I've made it's several steps myself due to course, such as: item-status-filter, 
 All functional, which was made with teacher you can see there: https://github.com/Juriy/pro-react-redux/tree/master/todo/todo-final .
 
 I've added more functions and components to make it similar to production app:
-    1. added new components: ErrorBoundry, ErrorIndicator, LoadingIndicator (with hooks).
+    1. new components: ErrorBoundry, ErrorIndicator, LoadingIndicator (with hooks).
+    2. mock service which first time will replace normal server. 
 
 
 Plans:

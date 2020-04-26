@@ -15,8 +15,8 @@ const LoadingIndicator = ({ finishLoading }) => {
         width: progress + '%'
     }
     return (
-        <div class="progress">
-            <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style={style} />
+        <div className="progress">
+            <div className="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style={style} />
         </div>
     )
 }

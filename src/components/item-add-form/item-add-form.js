@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import WithService from '../hoc/with-service';
 
 import './item-add-form.css';
 
-export default class ItemAddForm extends Component {
+class ItemAddForm extends Component {
 
   state = {
     label: ''
@@ -18,8 +19,9 @@ export default class ItemAddForm extends Component {
     e.preventDefault();
     const { label } = this.state;
     this.setState({ label: '' });
-    const cb = this.props.onItemAdded || (() => {});
-    cb(label);
+    
+    this.props.onItemAdded(label);
+    this.props.service.addItem(label);
   };
 
   render() {
@@ -40,3 +42,6 @@ export default class ItemAddForm extends Component {
     );
   }
 }
+
+
+export default WithService(ItemAddForm);
