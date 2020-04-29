@@ -2,8 +2,8 @@ import React from 'react';
 
 import './todo-list-item.css';
 
-const TodoListItem = ({ important, done,
-      label, onToggleImportant, onToggleDone, onDelete }) => {
+const TodoListItem = ({ id, important, done,
+      label, toggleImportant, onDelete, toggleDone }) => {
 
   let classNames = 'todo-list-item';
   if (important) {
@@ -19,11 +19,11 @@ const TodoListItem = ({ important, done,
     <span className={classNames}>
       <span
         className="todo-list-item-label"
-        onClick={onToggleDone}>{label}</span>
+        onClick={toggleDone}>{label}</span>
 
       <button type="button"
               className="btn btn-outline-success btn-sm float-right"
-              onClick={onToggleImportant}>
+              onClick={toggleImportant}>
         <i className="fa fa-exclamation"></i>
       </button>
 

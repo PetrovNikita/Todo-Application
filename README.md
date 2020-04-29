@@ -5,7 +5,11 @@ All functional, which was made with teacher you can see there: https://github.co
 
 I've added more functions and components to make it similar to production app:
     1. new components: ErrorBoundry, ErrorIndicator, LoadingIndicator (with hooks).
-    2. mock service which first time will replace normal server. 
+    2. mock service which simulating lag and errors using promises (first time will replace normal server).
+    3. moved state to redux. 
+    4. Logic assigned to state data with user actions in App component removed to components which listening user actions.  (actions with items)
+    5. Rewrite reducer to more comfortable view: each state data element routes by its own function.
+    6. Added thunkMiddleware;
 
 
 Plans:

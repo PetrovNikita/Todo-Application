@@ -1,13 +1,16 @@
 import React, { Component } from "react";
+import {bindActionCreators, compose} from "redux";
 import { connect } from "react-redux";
+import store from "../../store.js";
 
 import AppHeader from '../app-header';
 import TodoList from '../todo-list';
 import SearchPanel from '../search-panel';
 import ItemStatusFilter from '../item-status-filter';
 import ItemAddForm from '../item-add-form';
-//import LoadingIndicator from '../loading-indicator';
-import WithService from '../hoc/with-service'
+import LoadingIndicator from '../loading-indicator';
+import WithService from '../hoc/with-service';
+import ErrorIndicator from '../error-indicator';
 
 import * as actions from '../../actions';
 
@@ -18,52 +21,12 @@ class App extends Component {
 
   onItemAdded = (label) => {
     const item = this.createItem(label);
-    this.props.loadItems([...this.props.items, item]) ;
-  };
-
-  toggleProperty = (arr, id, propName) => {
-    const idx = arr.findIndex((item) => item.id === id);
-    const oldItem = arr[idx];
-    const value = !oldItem[propName];
-    //копируем элементы, чтоб не мутировать состояние
-    const item = { ...arr[idx], [propName]: value } ;
-    //slice, чтоб не мутировать состояние
-    return [
-      ...arr.slice(0, idx),
-      item,
-      ...arr.slice(idx + 1)
-    ];
-  };
-
-  onToggleDone = (id) => {
-    const items = this.toggleProperty(this.props.items, id, 'done');
-    this.props.loadItems(items);
-  };
-
-  onToggleImportant = (id) => {
-    const items = this.toggleProperty(this.props.items, id, 'important');
-    this.props.loadItems(items);
-  };
-
-  onDelete = (id) => {
-      //копируем элементы, чтоб не мутировать состояние
-      const items = [...this.props.items];
-      const idx = items.findIndex((item) => item.id === id);
-      items.splice(idx, 1);
-      this.props.loadItems(items);
-  };
-
-  onFilterChange = (filter) => {
-    this.props.setFilter(filter);
-  };
-
-  onSearchChange = (search) => {
-    this.props.setSearch(search);
+    this.props.addItem(item) ;
   };
 
   createItem(label) {
     return {
-      id: ++this.maxId,
+      id: new Date().toISOString(),
       label,
       important: false,
       done: false
@@ -90,24 +53,26 @@ class App extends Component {
     });
   }
 
-  finishLoading = () => this.setState({loading: false});
-
   componentDidMount() {
-    console.log('mount');
-    const items = this.props.service.getItems();
-    this.props.loadItems(items);
+    this.props.fetchItems();
   } 
+
+  componentDidUpdate() {
+    this.props.service.postItems(store.getState());
+  }
 
 
 
   render() {
-    //закомментил загрузку чтоб не мешала
-    //if (this.state.loading) return <LoadingIndicator finishLoading={this.finishLoading}/>;
     console.log('render');
-    const { items, filter, search } = this.props;
+    const { items, filter, search, loading, hasError, setFilter, setSearch } = this.props;
     const doneCount = items.filter((item) => item.done).length;
     const toDoCount = items.length - doneCount;
     const visibleItems = this.searchItems(this.filterItems(items, filter), search); 
+
+    //закомментил загрузку чтоб не мешала
+    if (loading) return <LoadingIndicator/>;
+    if (hasError) return <ErrorIndicator />;
 
     return (
       <div className="todo-app"> 
@@ -115,18 +80,15 @@ class App extends Component {
 
         <div className="search-panel d-flex">
           <SearchPanel
-            onSearchChange={this.onSearchChange}/>
+            onSearchChange={setSearch}/>
 
           <ItemStatusFilter
             filter={filter}
-            onFilterChange={this.onFilterChange} />
+            onFilterChange={setFilter} />
         </div>
       
         <TodoList
-          items={ visibleItems }
-          onToggleImportant={this.onToggleImportant}
-          onToggleDone={this.onToggleDone}
-          onDelete={this.onDelete} />
+          items={ visibleItems }/>
 
         <ItemAddForm
           onItemAdded={this.onItemAdded} />
@@ -135,13 +97,21 @@ class App extends Component {
   };
 }
 
-const mapStateToProps = ({items, filter, search, loading}) => {
+const mapStateToProps = ({items, filter, search, loading, hasError}) => {
   return {
     items,
     filter,
     search,
-    loading
+    loading,
+    hasError
   };
 };
 
-export default connect(mapStateToProps, actions)(WithService(App));
+const mapDispatchToProps = (dispatch, {service}) => {
+  ///const { fetchItemsRequest, fetchItemsSuccess, fetchItemsFailure} = actions;
+  return {
+    ...bindActionCreators({...actions, fetchItems: actions.fetchItems(service)}, dispatch)
+  }
+};
+
+export default  compose(WithService, connect(mapStateToProps, mapDispatchToProps))(App);

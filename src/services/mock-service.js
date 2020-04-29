@@ -19,11 +19,22 @@ class service {
       }
 
     getItems() {
-        return this._items;
+        return new Promise((res, rej) => {
+            setTimeout(
+                () => {
+                    if (Math.random() > 0.8) rej(new Error("Error on server"))
+                    else res(this._items);
+                }
+                , 700);
+        });
     }
 
     addItem(label) {
         console.log('Item added: ', label);
+    }
+
+    postItems({items}) {
+        console.log("Items on server: ",items);
     }
 
 }
