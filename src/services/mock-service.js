@@ -33,7 +33,7 @@ class service {
         console.log('Item added: ', label);
     }
 
-    postItems({items}) {
+    postItems(items) {
         console.log("Items on server: ",items);
     }
 

@@ -22,3 +22,20 @@
   font-weight: bold;
   color: steelblue;
 }
+
+.bottom-panel {
+  margin: 0px;
+}
+
+.form-control {
+  margin-right: 5px;
+  padding-left: 20px;
+  font-size: 1.25rem;
+  line-height: 35px;
+  border-width: 0px;
+}
+
+.form-control:focus {
+  outline: none;
+}
+

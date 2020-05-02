@@ -1,39 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
+import StaticItem from "./static-label-item.js";
+import ChangingLabelItem from "./changing-label-item.js";
 
 import './todo-list-item.css';
 
-const TodoListItem = ({ id, important, done,
-      label, toggleImportant, onDelete, toggleDone }) => {
+const TodoListItem = (props) => {
 
-  let classNames = 'todo-list-item';
-  if (important) {
-    classNames += ' important';
-  }
+  let [changingLabel, setChangingLabel] = useState(false);
+  
 
-  if (done) {
-    classNames += ' done';
-  }
+  const changeItem = () => {
+    console.log("change label");
+    setChangingLabel((oldValue) => !oldValue );
+  };
 
+
+  let todoItem = changingLabel ? <ChangingLabelItem {...props} changeItem={changeItem}/> : <StaticItem {...props} changeItem={changeItem}/>;
 
   return (
-    <span className={classNames}>
-      <span
-        className="todo-list-item-label"
-        onClick={toggleDone}>{label}</span>
-
-      <button type="button"
-              className="btn btn-outline-success btn-sm float-right"
-              onClick={toggleImportant}>
-        <i className="fa fa-exclamation"></i>
-      </button>
-
-      <button type="button"
-              className="btn btn-outline-danger btn-sm float-right"
-              onClick={onDelete}>
-        <i className="fa fa-trash-o"></i>
-      </button>
-    </span>
-  );
+    todoItem
+  )
 };
 
 export default TodoListItem;

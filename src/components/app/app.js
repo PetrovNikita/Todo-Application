@@ -58,13 +58,12 @@ class App extends Component {
   } 
 
   componentDidUpdate() {
-    this.props.service.postItems(store.getState());
+    this.props.service.postItems(store.getState().items);
   }
 
 
 
   render() {
-    console.log('render');
     const { items, filter, search, loading, hasError, setFilter, setSearch } = this.props;
     const doneCount = items.filter((item) => item.done).length;
     const toDoCount = items.length - doneCount;
@@ -97,15 +96,7 @@ class App extends Component {
   };
 }
 
-const mapStateToProps = ({items, filter, search, loading, hasError}) => {
-  return {
-    items,
-    filter,
-    search,
-    loading,
-    hasError
-  };
-};
+const mapStateToProps = (state) => state;
 
 const mapDispatchToProps = (dispatch, {service}) => {
   ///const { fetchItemsRequest, fetchItemsSuccess, fetchItemsFailure} = actions;

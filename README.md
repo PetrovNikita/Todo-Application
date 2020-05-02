@@ -10,6 +10,7 @@ I've added more functions and components to make it similar to production app:
     4. Logic assigned to state data with user actions in App component removed to components which listening user actions.  (actions with items)
     5. Rewrite reducer to more comfortable view: each state data element routes by its own function.
     6. Added thunkMiddleware;
+    7. new feature: changing label of todo-item.
 
 
 Plans:

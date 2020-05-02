@@ -7,17 +7,18 @@ import TodoListItem from '../todo-list-item/todo-list-item';
 
 import './todo-list.css';
 
-const TodoList = ({ items, toggleImportant, toggleDone, onDelete }) => {
+const TodoList = ({ items, toggleImportant, toggleDone, onDelete, changeLabel }) => {
 
   const elements = items.map((item) => {
-    const {id, ...itemData} = item;
+    const {id} = item;
     return (
       <li key={id} className="list-group-item">
         <TodoListItem
-          { ...itemData }
+          { ...item }
           toggleImportant={ () => toggleImportant(id) }
           onDelete={ () => onDelete(id) } 
-          toggleDone = {() => toggleDone(id)} />
+          toggleDone = {() => toggleDone(id)} 
+          changeLabel = {changeLabel} />
       </li>
     );
   });
@@ -28,7 +29,8 @@ const TodoList = ({ items, toggleImportant, toggleDone, onDelete }) => {
 const mapDispatchToProps = (dispatch) => bindActionCreators({
     toggleDone: actions.toggleDone,
     toggleImportant: actions.toggleImportant,
-    onDelete: actions.deleteItem
+    onDelete: actions.deleteItem,
+    changeLabel: actions.changeLabel
   }, dispatch);
 
 export default connect(() => ({}), mapDispatchToProps)(TodoList);

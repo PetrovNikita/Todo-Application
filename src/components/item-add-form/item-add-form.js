@@ -35,7 +35,6 @@ class ItemAddForm extends Component {
                value={this.state.label}
                onChange={this.onLabelChange}
                placeholder="What needs to be done?" />
-
         <button type="submit"
                 className="btn btn-outline-secondary">Add</button>
       </form>

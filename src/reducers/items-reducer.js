@@ -21,6 +21,11 @@ export default function itemsReducer ({items=[]}, action) {
             return [...items, action.payload];
         }
 
+        case "CHANGE_LABEL": {
+            const {id, newLabel} = action.payload;
+            return changeLabel(items, id, newLabel);
+        }
+
         case "TOGGLE_DONE": {
             return toggleProperty(items, action.payload, 'done');
         }
@@ -48,6 +53,18 @@ function toggleProperty (arr, id, propName) {
       ...arr.slice(idx + 1)
     ];
 };
+
+function changeLabel(arr, id, newLabel) {
+    const idx = arr.findIndex((item) => item.id === id);
+    //копируем элементы, чтоб не мутировать состояние
+    const item = { ...arr[idx], label: newLabel } ;
+    //slice, чтоб не мутировать состояние
+    return [
+      ...arr.slice(0, idx),
+      item,
+      ...arr.slice(idx + 1)
+    ];
+}
 
 function onDelete (arr, id) {
     //копируем элементы, чтоб не мутировать состояние
