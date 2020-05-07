@@ -22,7 +22,7 @@ class service {
         return new Promise((res, rej) => {
             setTimeout(
                 () => {
-                    if (Math.random() > 0.8) rej(new Error("Error on server"))
+                    if (Math.random() > 1) rej(new Error("Error on server"))
                     else res(this._items);
                 }
                 , 700);
