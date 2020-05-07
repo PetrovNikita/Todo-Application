@@ -23,19 +23,24 @@
   color: steelblue;
 }
 
-.bottom-panel {
-  margin: 0px;
+.bottom-panel.label-change-form {
+  margin-top: 0px;
 }
 
-.form-control {
-  margin-right: 5px;
+.label-change-input {
+  margin-right: 3px;
   padding-left: 20px;
+  padding-top: 0px;
+  padding-bottom: 0px;
   font-size: 1.25rem;
-  line-height: 35px;
-  border-width: 0px;
+  border: none;
 }
 
-.form-control:focus {
-  outline: none;
+.label-change-submit {
+  align-self: stretch;
+}
+
+.label-change-input:focus {
+  outline-width: 1px;
 }
 
