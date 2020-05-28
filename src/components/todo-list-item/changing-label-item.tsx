@@ -1,21 +1,22 @@
 import React, {useState, useEffect, useRef} from "react";
+import { ITodoListItemChanging } from '../../interfaces/interfaces';
 
-export default function ChangingLabelItem ({id, label, changeLabel, changeItem}) {
+const ChangingLabelItem:React.FC<ITodoListItemChanging> = ({id, label, changeLabel, changeItem}) => {
 
-    let [labelValue, setLabelValue] = useState(label);
-    const inputElem = useRef(null);
+    let [labelValue, setLabelValue] = useState<string>(label);
+    const inputElem = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-        inputElem.current.focus();
-        inputElem.current.select();
+        inputElem.current!.focus();
+        inputElem.current!.select();
     }, []);
 
-    const onLabelChange = (event) => {
+    const onLabelChange = (event:React.ChangeEvent<HTMLInputElement>) => {
         let newLabel = event.target.value;
         setLabelValue(newLabel);
     };
 
-    const onSubmit = (event) => {
+    const onSubmit = (event:React.FormEvent) => {
         event.preventDefault();
         changeLabel(id, labelValue);
         changeItem();
@@ -33,3 +34,5 @@ export default function ChangingLabelItem ({id, label, changeLabel, changeItem})
     );
 
 };
+
+export default ChangingLabelItem;

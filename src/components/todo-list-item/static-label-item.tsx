@@ -1,8 +1,8 @@
 import React from "react";
+import { ITodoListItemChanging } from '../../interfaces/interfaces';
 
-
-export default function StaticLabelItem ({ important, done,
-    label, toggleImportant, onDelete, toggleDone, changeItem }) {
+const StaticLabelItem: React.FC<ITodoListItemChanging> = ({ important, done,
+    label, toggleImportant, onDelete, toggleDone, changeItem }) => {
 
     let classNames = 'todo-list-item';
     if (important) {
@@ -39,3 +39,6 @@ export default function StaticLabelItem ({ important, done,
         </span>
     )
 };
+
+
+export default StaticLabelItem;

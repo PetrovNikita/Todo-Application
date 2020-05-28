@@ -15,7 +15,7 @@ import ErrorIndicator from '../error-indicator';
 import * as actions from '../../actions';
 
 import './app.css';
-
+import { Footer } from "../footer/footer.tsx";
 
 class App extends Component {
 
@@ -69,7 +69,6 @@ class App extends Component {
     const toDoCount = items.length - doneCount;
     const visibleItems = this.searchItems(this.filterItems(items, filter), search); 
 
-    //закомментил загрузку чтоб не мешала
     if (loading) return <LoadingIndicator/>;
     if (hasError) return <ErrorIndicator />;
 
@@ -91,6 +90,8 @@ class App extends Component {
 
         <ItemAddForm
           onItemAdded={this.onItemAdded} />
+        
+        <Footer name="Kryash" onClickFn={()=>alert('click')}/>
       </div>
     );
   };
