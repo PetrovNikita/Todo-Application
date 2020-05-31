@@ -11,11 +11,10 @@ import ItemAddForm from '../item-add-form';
 import LoadingIndicator from '../loading-indicator';
 import WithService from '../hoc/with-service';
 import ErrorIndicator from '../error-indicator';
-
+import { Footer } from "../footer/footer.tsx";
 import * as actions from '../../actions';
 
 import './app.css';
-import { Footer } from "../footer/footer.tsx";
 
 class App extends Component {
 
@@ -33,41 +32,22 @@ class App extends Component {
     };
   }
 
-  filterItems(items, filter) {
-    if (filter === 'all') {
-      return items;
-    } else if (filter === 'active') {
-      return items.filter((item) => (!item.done));
-    } else if (filter === 'done') {
-      return items.filter((item) => item.done);
-    }
-  }
-
-  searchItems(items, search='') {
-    if (search.length === 0) {
-      return items;
-    }
-
-    return items.filter((item) => {
-      return item.label.toLowerCase().indexOf(search.toLowerCase()) > -1;
-    });
-  }
-
   componentDidMount() {
     this.props.fetchItems();
   } 
 
-  componentDidUpdate() {
-    this.props.service.postItems(store.getState().items);
+  componentDidUpdate({items: prevItems}) {
+    console.log(prevItems);
+    if (this.props.items.length > 0 || prevItems.length > 0) this.props.service.postItems(store.getState().items);
   }
 
 
 
   render() {
-    const { items, filter, search, loading, hasError, setFilter, setSearch } = this.props;
+    const { items, filter, loading, hasError, setFilter, setSearch } = this.props;
     const doneCount = items.filter((item) => item.done).length;
     const toDoCount = items.length - doneCount;
-    const visibleItems = this.searchItems(this.filterItems(items, filter), search); 
+    
 
     if (loading) return <LoadingIndicator/>;
     if (hasError) return <ErrorIndicator />;
@@ -85,13 +65,12 @@ class App extends Component {
             onFilterChange={setFilter} />
         </div>
       
-        <TodoList
-          items={ visibleItems }/>
+        <TodoList />
 
         <ItemAddForm
           onItemAdded={this.onItemAdded} />
         
-        <Footer name="Kryash" onClickFn={()=>alert('click')}/>
+        <Footer/>
       </div>
     );
   };
@@ -100,7 +79,6 @@ class App extends Component {
 const mapStateToProps = (state) => state;
 
 const mapDispatchToProps = (dispatch, {service}) => {
-  ///const { fetchItemsRequest, fetchItemsSuccess, fetchItemsFailure} = actions;
   return {
     ...bindActionCreators({...actions, fetchItems: actions.fetchItems(service)}, dispatch)
   }

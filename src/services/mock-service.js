@@ -1,11 +1,13 @@
 class service {
     constructor() {
         this._id = 10;
-        this._items = [
+        if (!localStorage.getItem('todos')) localStorage.setItem('todos', JSON.stringify([]));
+        
+/*        [
             { id: 1, label: 'Drink Coffee', important: false, done: false },
             { id: 2, label: 'Learn React', important: true, done: false },
             { id: 3, label: 'Make Awesome App', important: false, done: false }
-        ];
+        ];*/
 
     }
 
@@ -23,18 +25,19 @@ class service {
             setTimeout(
                 () => {
                     if (Math.random() > 1) rej(new Error("Error on server"))
-                    else res(this._items);
+                    else {
+                        console.log(JSON.parse(localStorage.getItem('todos')));
+                        res(JSON.parse(localStorage.getItem('todos')));
+                    }
                 }
                 , 700);
         });
     }
 
-    addItem(label) {
-        console.log('Item added: ', label);
-    }
 
     postItems(items) {
-        console.log("Items on server: ",items);
+        console.log("Items saved.", items);
+        localStorage.setItem('todos', JSON.stringify(items));
     }
 
 }

@@ -21,7 +21,6 @@ class ItemAddForm extends Component {
     this.setState({ label: '' });
     
     this.props.onItemAdded(label);
-    this.props.service.addItem(label);
   };
 
   render() {

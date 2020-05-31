@@ -22,7 +22,7 @@ const fetchItems = (service) => () => (dispatch) => {
     dispatch( fetchItemsRequest() );
     service.getItems()
         .then((items) => dispatch( fetchItemsSuccess(items) ))
-        .catch((err) => dispatch(fetchItemsFailure() ))
+        .catch(() => dispatch(fetchItemsFailure() ))
 };
 
 export {

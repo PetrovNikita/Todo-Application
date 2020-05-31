@@ -1,4 +1,9 @@
+
+
 .todo-app {
-  margin: 2rem auto 0 auto;
+  position: relative;
+  padding-top: 2rem;
+  padding-bottom: 50px;
   max-width: 500px;
+  min-height: 100%;
 }

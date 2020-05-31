@@ -1,9 +1,11 @@
 .footer {
-    position: relative;
-    display: block;
+    display: inline-block;
+    position: absolute;
+    bottom: 0;
     width: 100%;
     padding: 10px 0px;
     text-align: center;
-    font-size: 14px;
+    font-size: 12px;
+    height: fit-content;
 }
 
