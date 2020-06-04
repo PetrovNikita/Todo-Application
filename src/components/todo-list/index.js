@@ -1,3 +1,3 @@
-import TodoList from './todo-list';
+import TodoList from './todo-list.tsx';
 
 export default TodoList;
